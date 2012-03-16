@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>StyleCop.MSBuild</id>
+    <version>4.7.14.0</version>
+    <authors>Andy Reeves</authors>
+    <owners>Adam Ralph</owners>
+    <projectUrl>http://stylecop.codeplex.com/</projectUrl>
+    <licenseUrl>http://stylecop.codeplex.com/license</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>StyleCop with MSBuild targets. Allows the running of StyleCop analysis either as part of an automated build process or manually without Visual Studio. Removes the need to install StyleCop on either a build server or developer workstation.</description>
+    <language>en-US</language>
+  </metadata>
+  <files>
+    <file src="Settings.StyleCop" target="Settings.StyleCop" />
+    <file src="StyleCop.CSharp.dll" target="StyleCop.CSharp.dll" />
+    <file src="StyleCop.CSharp.Rules.dll" target="StyleCop.CSharp.Rules.dll" />
+    <file src="StyleCop.dll" target="StyleCop.dll" />
+    <file src="StyleCop.Targets" target="StyleCop.Targets" />
+  </files>
+</package>
