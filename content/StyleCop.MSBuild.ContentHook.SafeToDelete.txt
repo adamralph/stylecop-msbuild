@@ -1,0 +1,4 @@
+It is safe to delete this file.
+This file is a hook to invoke the PowerShell scripts in the StyleCop.MSBuild package.
+This file should be automatically deleted when the StyleCop.MSBuild package is installed.
+If this file has not been deleted automatically, there may be a problem with the StyleCop.MSBuild package and this should be reported at https://bitbucket.org/adamralph/stylecop-msbuild/issues?status=new&status=open
