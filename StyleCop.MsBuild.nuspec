@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>StyleCop.MSBuild</id>
-    <version>4.7.17.1-beta1</version>
+    <version>4.7.17.1-beta2</version>
     <authors>Andy Reeves</authors>
     <owners>Adam Ralph</owners>
     <projectUrl>http://stylecop.codeplex.com/</projectUrl>
