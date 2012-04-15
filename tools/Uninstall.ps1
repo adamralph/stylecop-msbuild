@@ -7,14 +7,13 @@ $project.Save()
 $projectXml = [xml](Get-Content $project.FullName)
 $namespace = 'http://schemas.microsoft.com/developer/msbuild/2003'
 
-# remove imports
+# remove import nodes
 $nodes = @(Select-Xml "//msb:Project/msb:Import[contains(@Project,'\packages\StyleCop.MSBuild.')]" $projectXml -Namespace @{msb = $namespace} | Foreach {$_.Node})
 if ($nodes)
 {
     foreach ($node in $nodes)
     {
-        $parentNode = $node.ParentNode
-        [void]$parentNode.RemoveChild($node)
+        $node.ParentNode.RemoveChild($node)
     }
 }
 

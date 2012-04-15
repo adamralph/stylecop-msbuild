@@ -1,35 +1,33 @@
 param($installPath, $toolsPath, $package, $project)
 
-# remove and delete content hook
-$hookName = "StyleCop.MSBuild.ContentHook.SafeToDelete.txt"
+# remove content hook from project and delete file
+$hookName = "StyleCop.MSBuild.ContentHook.txt"
 $project.ProjectItems.Item($hookName).Remove();
-[System.IO.FILE]::Delete([System.IO.PATH]::COMBINE([System.IO.PATH]::GETDIRECTORYNAME($project.FullName), $hookName))
+Split-Path $project.FullName -parent | Join-Path -ChildPath $hookName | Remove-Item
 
-# save any unsaved changes before we start messing about with the project file on disk
+# save any unsaved changes to project before we start messing about with project file
 $project.Save()
 
 # read in project XML
 $projectXml = [xml](Get-Content $project.FullName)
 $namespace = 'http://schemas.microsoft.com/developer/msbuild/2003'
 
-# remove old imports
+# remove current import nodes
 $nodes = @(Select-Xml "//msb:Project/msb:Import[contains(@Project,'\packages\StyleCop.MSBuild.')]" $projectXml -Namespace @{msb = $namespace} | Foreach {$_.Node})
 if ($nodes)
 {
     foreach ($node in $nodes)
     {
-        $parentNode = $node.ParentNode
-        [void]$parentNode.RemoveChild($node)
+        $node.ParentNode.RemoveChild($node)
     }
 }
 
-# work out relateive path to targets
-$absolutePath = [System.IO.PATH]::COMBINE($toolsPath, "StyleCop.targets")
+# work out relative path to targets
+$absolutePath = Join-Path $toolsPath "StyleCop.targets"
 $absoluteUri = New-Object -typename System.Uri -argumentlist $absolutePath
 $projectUri = New-Object -typename System.Uri -argumentlist $project.FullName
 $relativeUri = $projectUri.MakeRelativeUri($absoluteUri)
-$relativePath = [System.URI]::UnescapeDataString($relativeUri.ToString());
-$relativePath = $relativePath.Replace('/', [System.IO.PATH]::DirectorySeparatorChar);
+$relativePath = [System.URI]::UnescapeDataString($relativeUri.ToString()).Replace('/', '\');
 
 # add new import
 $import = $projectXml.CreateElement('Import', $namespace)
