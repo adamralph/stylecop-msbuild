@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>StyleCop.MSBuild</id>
-    <version>4.7.17.2-beta1</version>
+    <version>4.7.18.0</version>
     <authors>Andy Reeves, Adam Ralph</authors>
     <owners>Adam Ralph</owners>
     <projectUrl>http://stylecop.codeplex.com/</projectUrl>
@@ -10,8 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Adds StyleCop MSBuild targets to your project for the execution of StyleCop analysis during build, either as part of an automated build process or manually with or without Visual Studio. Removes the need to install StyleCop on either a build server or developer workstation.
 NOTE: If your solution is currently using StyleCop.MSBuild.4.7.17.0 or earlier, updating to this version will not work. Instead, manually remove your current version and then install this version.</description>
-    <releaseNotes>Addition of &lt;Import&gt; element to project file when installing package (and removal when uninstalling).
-NOTE: If your solution is currently using StyleCop.MSBuild.4.7.17.0 or earlier, updating to this version will not work. Instead, manually remove your current version and then install this version.</releaseNotes>
+    <releaseNotes>See https://stylecop.codeplex.com/.</releaseNotes>
     <language>en-US</language>
     <copyright>(Package scripts) Copyright (c) 2012 Adam Ralph (adam@adamralph.com)</copyright>
   </metadata>
