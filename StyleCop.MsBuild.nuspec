@@ -2,18 +2,18 @@
 <package>
   <metadata>
     <id>StyleCop.MSBuild</id>
-    <version>4.7.26.5</version>
+    <version>4.7.26.6</version>
     <authors>Andy Reeves, Adam Ralph</authors>
     <owners>Adam Ralph</owners>
     <projectUrl>http://stylecop.codeplex.com/</projectUrl>
     <licenseUrl>http://stylecop.codeplex.com/license</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Adds official StyleCop MSBuild targets to your project. Runs StyleCop analysis on your project with every build. Works both on a developer workstation (with or without Visual Studio) and on a build server. Includes official StyleCop binaries. Does not require installation of StyleCop on either a developer workstation or build server. For update notifications follow https://twitter.com/#!/adamralph and/or subscribe to http://adamralph.blogspot.com/. (Package source hosted at https://bitbucket.org/adamralph/stylecop-msbuild.)
-NOTE: There is a known issue when installing or updating packages with NuGet Package Manager 1.8 or later, if you have problems installing or updating to this version of StyleCop.MSBuild, see http://nuget.codeplex.com/workitem/2253 for a workaround.
+NOTE: There is a known issue with NuGet Package Manager 1.8 or later, if you have problems installing this version of StyleCop.MSBuild, see http://nuget.codeplex.com/workitem/2253 for a workaround.
 NOTE: If your solution is currently using StyleCop.MSBuild.4.7.17.0 or earlier, updating to this version will NOT work. Instead, uninstall your current version and then install this version.</description>
     <releaseNotes>(StyleCop.MSBuild) Fixed removal of current Import in csproj file.
 (StyleCop) see the project site.
-NOTE: There is a known issue when installing or updating packages with NuGet Package Manager 1.8 or later, if you have problems installing or updating to this version of StyleCop.MSBuild, see http://nuget.codeplex.com/workitem/2253 for a workaround.
+NOTE: There is a known issue with NuGet Package Manager 1.8 or later, if you have problems installing this version of StyleCop.MSBuild, see http://nuget.codeplex.com/workitem/2253 for a workaround.
 NOTE: If your solution is currently using StyleCop.MSBuild.4.7.17.0 or earlier, updating to this version will NOT work. Instead, uninstall your current version and then install this version.</releaseNotes>
     <language>en-US</language>
     <copyright>(Package scripts) Copyright (c) 2012 Adam Ralph (adam@adamralph.com)</copyright>
