@@ -14,12 +14,12 @@ NOTE: There is a known issue with NuGet Package Manager 1.8 or later. If you hav
 
 NOTE: If your solution is currently using StyleCop.MSBuild.4.7.17.0 or earlier, updating to this version will NOT work. Instead, uninstall your current version and then install this version.</description>
     <releaseNotes>StyleCop (main project)
-================================
+========
 See the project site.
 
 
-StyleCop.MSBuild (NuGet package only)
-================================
+StyleCop.MSBuild (NuGet package)
+========
 4.7.26.1 Fixed removal of current &lt;Import&gt; element in csproj file when the repository root folder is not named 'packages' and/or when the repository root folder belongs to the same folder as the csproj file.
 
 4.7.17.1 Addition of &lt;Import&gt; element to project file when installing package (and removal when uninstalling).
