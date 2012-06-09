@@ -9,6 +9,27 @@ $project.Save()
 $projectXml = [xml](Get-Content $project.FullName)
 $namespace = 'http://schemas.microsoft.com/developer/msbuild/2003'
 
+# remove StyleCopMSBuildCheckTargetsFile from initial targets
+$initialTargets = $projectXml.Project.GetAttribute('InitialTargets').Split(";", [System.StringSplitOptions]::RemoveEmptyEntries) | select -uniq | where {$_ -ne 'StyleCopMSBuildCheckTargetsFile'}
+if ($initialTargets)
+{
+    $projectXml.Project.SetAttribute('InitialTargets', [string]::Join(";", $initialTargets))
+}
+else
+{
+    $projectXml.Project.RemoveAttribute('InitialTargets')
+}
+
+# remove current StyleCopMSBuildCheckTargetsFile targets
+$nodes = @(Select-Xml "//msb:Project/msb:Target[@Name='StyleCopMSBuildCheckTargetsFile']" $projectXml -Namespace @{msb = $namespace} | Foreach {$_.Node})
+if ($nodes)
+{
+    foreach ($node in $nodes)
+    {
+        $node.ParentNode.RemoveChild($node)
+    }
+}
+
 # remove import nodes
 $nodes = @(Select-Xml "//msb:Project/msb:Import[contains(@Project,'\StyleCop.MSBuild.')]" $projectXml -Namespace @{msb = $namespace} | Foreach {$_.Node})
 if ($nodes)
