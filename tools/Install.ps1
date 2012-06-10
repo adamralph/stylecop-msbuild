@@ -14,32 +14,60 @@ $project.Save()
 $projectXml = [xml](Get-Content $project.FullName)
 $namespace = 'http://schemas.microsoft.com/developer/msbuild/2003'
 
-# remove current StyleCopMSBuildCheckTargetsFile targets
-$nodes = @(Select-Xml "//msb:Project/msb:Target[@Name='StyleCopMSBuildCheckTargetsFile']" $projectXml -Namespace @{msb = $namespace} | Foreach {$_.Node})
-if ($nodes)
+
+
+# the following removal steps are copied from Uninstall.ps1 - they are executed here for safety, in case for some reason Uninstall.ps1 hasn't been executed
+# TODO: move the removal steps into a separate file and call from both scripts
+
+# remove addition(s) of StyleCopMSBuildCheckTargetsFile target to BuildDependsOn property
+$buildDependsOns = Select-Xml "//msb:Project/msb:PropertyGroup/msb:BuildDependsOn[contains(.,'StyleCopMSBuildCheckTargetsFile')]" $projectXml -Namespace @{msb = $namespace}
+if ($buildDependsOns)
 {
-    foreach ($node in $nodes)
+    foreach ($buildDependsOn in $buildDependsOns)
     {
-        $node.ParentNode.RemoveChild($node)
+        $propertyGroup = $buildDependsOn.Node.ParentNode
+        $propertyGroup.RemoveChild($buildDependsOn.Node)
+        if (!$propertyGroup.HasChildNodes)
+        {
+            $propertyGroup.ParentNode.RemoveChild($propertyGroup)
+        }
     }
 }
 
-# remove current import nodes
-$nodes = @(Select-Xml "//msb:Project/msb:Import[contains(@Project,'\StyleCop.MSBuild.')]" $projectXml -Namespace @{msb = $namespace} | Foreach {$_.Node})
-if ($nodes)
+# remove StyleCopMSBuildCheckTargetsFile target(s)
+$targets = Select-Xml "//msb:Project/msb:Target[@Name='StyleCopMSBuildCheckTargetsFile']" $projectXml -Namespace @{msb = $namespace}
+if ($targets)
 {
-    foreach ($node in $nodes)
+    foreach ($target in $targets)
     {
-        $node.ParentNode.RemoveChild($node)
+        $target.Node.ParentNode.RemoveChild($target.Node)
     }
 }
+
+# remove import(s)
+$imports = Select-Xml "//msb:Project/msb:Import[contains(@Project,'\StyleCop.MSBuild.')]" $projectXml -Namespace @{msb = $namespace}
+if ($imports)
+{
+    foreach ($import in $imports)
+    {
+        $import.Node.ParentNode.RemoveChild($import.Node)
+    }
+}
+
+
 
 # work out relative path to targets
 $absolutePath = Join-Path $toolsPath "StyleCop.targets"
 $absoluteUri = New-Object -typename System.Uri -argumentlist $absolutePath
 $projectUri = New-Object -typename System.Uri -argumentlist $project.FullName
 $relativeUri = $projectUri.MakeRelativeUri($absoluteUri)
-$relativePath = [System.URI]::UnescapeDataString($relativeUri.ToString()).Replace('/', '\');
+$relativePath = [System.URI]::UnescapeDataString($relativeUri.ToString()).Replace([System.IO.Path]::AltDirectorySeparatorChar, [System.IO.Path]::DirectorySeparatorChar)
+
+# add import
+$import = $projectXml.CreateElement('Import', $namespace)
+$import.SetAttribute('Condition', "Exists('$relativePath')")
+$import.SetAttribute('Project', $relativePath)
+$projectXml.Project.AppendChild($import)
 
 # add StyleCopMSBuildCheckTargetsFile target
 $target = $projectXml.CreateElement('Target', $namespace)
@@ -50,15 +78,12 @@ $error.SetAttribute('Text', "The StyleCop.MSBuild package is either incomplete o
 $target.AppendChild($error)
 $projectXml.Project.AppendChild($target)
 
-# add StyleCopMSBuildCheckTargetsFile to initial targets
-$initialTargets = $projectXml.Project.GetAttribute('InitialTargets').Split(";", [System.StringSplitOptions]::RemoveEmptyEntries) + 'StyleCopMSBuildCheckTargetsFile' | select -uniq
-$projectXml.Project.SetAttribute('InitialTargets', [string]::Join(";", $initialTargets))
-
-# add new import
-$import = $projectXml.CreateElement('Import', $namespace)
-$import.SetAttribute('Condition', "Exists('$relativePath')")
-$import.SetAttribute('Project', $relativePath)
-$projectXml.Project.AppendChild($import)
+# add StyleCopMSBuildCheckTargetsFile target to BuildDependsOn property
+$propertyGroup = $projectXml.CreateElement('PropertyGroup', $namespace)
+$buildDependsOn = $projectXml.CreateElement('BuildDependsOn', $namespace)
+$buildDependsOn.AppendChild($projectXml.CreateTextNode('$(BuildDependsOn);StyleCopMSBuildCheckTargetsFile;'))
+$propertyGroup.AppendChild($buildDependsOn)
+$projectXml.Project.AppendChild($propertyGroup)
 
 # save changes
 $projectXml.Save($project.FullName)
