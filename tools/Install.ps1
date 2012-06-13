@@ -72,20 +72,39 @@ $projectXml.Project.AppendChild($import)
 # add StyleCopMSBuildCheckTargetsFile target
 $target = $projectXml.CreateElement('Target', $namespace)
 $target.SetAttribute('Name', 'StyleCopMSBuildCheckTargetsFile')
+
+$message = "Failed to find file '$relativePath'. The StyleCop.MSBuild package is either missing or incomplete. If you are building manually using an IDE (e.g. Visual Studio), ensure that the package is present and then (IMPORTANT) reload the project in order to import the targets. Otherwise, ensure that the package is present and then restart the build."
+
 $warning = $projectXml.CreateElement('Warning', $namespace)
-$warning.SetAttribute('Condition', "!Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)!=false")
-$warning.SetAttribute('Text', "The StyleCop.MSBuild package is either incomplete or missing. Failed to find file '$relativePath'.")
-$error = $projectXml.CreateElement('Error', $namespace)
-$error.SetAttribute('Condition', "!Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)==false")
-$error.SetAttribute('Text', "The StyleCop.MSBuild package is either incomplete or missing. Failed to find file '$relativePath'.")
+$warning.SetAttribute('Condition', "!Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)!=false And `$(RestorePackages)!=true")
+$warning.SetAttribute('Text', "$message")
 $target.AppendChild($warning)
+
+$error = $projectXml.CreateElement('Error', $namespace)
+$error.SetAttribute('Condition', "!Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)==false And `$(RestorePackages)!=true")
+$error.SetAttribute('Text', "$message")
 $target.AppendChild($error)
+
+$messageRestore = "Failed to find file '$relativePath'. The StyleCop.MSBuild package has not been restored. If you are building manually using an IDE (e.g. Visual Studio), restore the StyleCop.MSBuild package and then (IMPORTANT) reload the project in order to import the targets. If you are building manually without using an IDE, restore the StyleCop.MSBuild package and then restart the build. If this is an automated build (e.g. CI server), ensure that the build process restores the StyleCop.MSBuild package before the project is built."
+
+$warningRestore = $projectXml.CreateElement('Warning', $namespace)
+$warningRestore.SetAttribute('Condition', "!Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)!=false And `$(RestorePackages)==true")
+$warningRestore.SetAttribute('Text', "$messageRestore")
+$target.AppendChild($warningRestore)
+
+$errorRestore = $projectXml.CreateElement('Error', $namespace)
+$errorRestore.SetAttribute('Condition', "!Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)==false And `$(RestorePackages)==true")
+$errorRestore.SetAttribute('Text', "$messageRestore")
+$target.AppendChild($errorRestore)
+
 $projectXml.Project.AppendChild($target)
 
+# TODO: replace this with adding the target to InitialTargets to ensure it runs before package restore
+# (using BuildDependsOn, if package restore is enabled after installation of StyleCop.MSBuild then package restore will run before StyleCopMSBuildCheckTargetsFile)
 # add StyleCopMSBuildCheckTargetsFile target to BuildDependsOn property
 $propertyGroup = $projectXml.CreateElement('PropertyGroup', $namespace)
 $buildDependsOn = $projectXml.CreateElement('BuildDependsOn', $namespace)
-$buildDependsOn.AppendChild($projectXml.CreateTextNode('$(BuildDependsOn);StyleCopMSBuildCheckTargetsFile;'))
+$buildDependsOn.AppendChild($projectXml.CreateTextNode('StyleCopMSBuildCheckTargetsFile;$(BuildDependsOn);'))
 $propertyGroup.AppendChild($buildDependsOn)
 $projectXml.Project.AppendChild($propertyGroup)
 
