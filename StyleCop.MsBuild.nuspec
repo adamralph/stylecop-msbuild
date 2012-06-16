@@ -21,7 +21,7 @@ StyleCop.MSBuild release notes:-
 
 4.7.31.1 (Bug) Can changes line endings to unix style in project file (https://bitbucket.org/adamralph/stylecop-msbuild/issue/2/can-changes-line-endings-to-unix-style-in).
 
-4.7.26.6 (Bug) Fixed removal of current &lt;Import&gt; element in csproj file when the repository root folder is not named 'packages' and/or when the repository root folder belongs to the same folder as the csproj file.
+4.7.26.6 (Bug) Import element is not removed from csproj file when the repository root folder is not named 'packages' and/or when the repository root folder belongs to the same folder as the csproj file.
 
 4.7.17.1 (Enchancement) Update .csproj Import during Nuget package install (https://stylecop.codeplex.com/workitem/7206).
 
