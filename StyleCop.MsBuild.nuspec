@@ -17,9 +17,9 @@ NOTE: If your solution is currently using StyleCop.MSBuild.4.7.17.0 or earlier, 
 
 StyleCop.MSBuild release notes:-
 
-4.7.31.2 (Enhancement) Compatibility with package restore workflow (https://bitbucket.org/adamralph/stylecop-msbuild/issue/1/does-not-work-with-package-restore).
+4.7.31.2 (Enhancement) Compatibility with package restore workflow (https://bitbucket.org/adamralph/stylecop-msbuild/issue/1).
 
-4.7.31.1 (Bug) Can changes line endings to unix style in project file (https://bitbucket.org/adamralph/stylecop-msbuild/issue/2/can-changes-line-endings-to-unix-style-in).
+4.7.31.1 (Bug) Changes element content line endings to unix style in project file (https://bitbucket.org/adamralph/stylecop-msbuild/issue/2).
 
 4.7.26.6 (Bug) Import element is not removed from csproj file when the repository root folder is not named 'packages' and/or when the repository root folder belongs to the same folder as the csproj file.
 
