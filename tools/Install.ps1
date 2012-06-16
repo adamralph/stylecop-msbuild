@@ -20,7 +20,7 @@ $namespace = 'http://schemas.microsoft.com/developer/msbuild/2003'
 # the following removal steps are copied from Uninstall.ps1 - they are executed here for safety, in case for some reason Uninstall.ps1 hasn't been executed
 # TODO: move the removal steps into a separate file and call from both scripts
 
-# remove addition(s) of StyleCopMSBuildCheckTargetsFile target to BuildDependsOn property
+# remove addition(s) of StyleCopMSBuildCheckTargetsFile target to BuildDependsOn property (was added in beta releases)
 $buildDependsOns = Select-Xml "//msb:Project/msb:PropertyGroup/msb:BuildDependsOn[contains(.,'StyleCopMSBuildCheckTargetsFile')]" $projectXml -Namespace @{msb = $namespace}
 if ($buildDependsOns)
 {
@@ -33,6 +33,17 @@ if ($buildDependsOns)
             $propertyGroup.ParentNode.RemoveChild($propertyGroup)
         }
     }
+}
+
+# remove StyleCopMSBuildCheckTargetsFile from initial targets
+$initialTargets = $projectXml.Project.GetAttribute('InitialTargets').Split(";", [System.StringSplitOptions]::RemoveEmptyEntries) | select -uniq | where {$_ -ne 'StyleCopMSBuildCheckTargetsFile'}
+if ($initialTargets)
+{
+    $projectXml.Project.SetAttribute('InitialTargets', [string]::Join(";", $initialTargets))
+}
+else
+{
+    $projectXml.Project.RemoveAttribute('InitialTargets')
 }
 
 # remove StyleCopMSBuildCheckTargetsFile target(s)
@@ -100,14 +111,9 @@ $target.AppendChild($errorRestore)
 
 $projectXml.Project.AppendChild($target)
 
-# TODO: replace this with adding the target to InitialTargets to ensure it runs before package restore
-# (using BuildDependsOn, if package restore is enabled after installation of StyleCop.MSBuild then package restore will run before StyleCopMSBuildCheckTargetsFile)
-# add StyleCopMSBuildCheckTargetsFile target to BuildDependsOn property
-$propertyGroup = $projectXml.CreateElement('PropertyGroup', $namespace)
-$buildDependsOn = $projectXml.CreateElement('BuildDependsOn', $namespace)
-$buildDependsOn.AppendChild($projectXml.CreateTextNode('StyleCopMSBuildCheckTargetsFile;$(BuildDependsOn);'))
-$propertyGroup.AppendChild($buildDependsOn)
-$projectXml.Project.AppendChild($propertyGroup)
+# add StyleCopMSBuildCheckTargetsFile to initial targets
+$initialTargets = $projectXml.Project.GetAttribute('InitialTargets').Split(";", [System.StringSplitOptions]::RemoveEmptyEntries) + 'StyleCopMSBuildCheckTargetsFile' | select -uniq
+$projectXml.Project.SetAttribute('InitialTargets', [string]::Join(";", $initialTargets))
 
 # save changes
 $projectXml.Save($project.FullName)

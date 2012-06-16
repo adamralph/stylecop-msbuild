@@ -10,7 +10,7 @@ $projectXml = New-Object System.Xml.XmlDocument
 $projectXml.Load($project.FullName)
 $namespace = 'http://schemas.microsoft.com/developer/msbuild/2003'
 
-# remove addition(s) of StyleCopMSBuildCheckTargetsFile target to BuildDependsOn property
+# remove addition(s) of StyleCopMSBuildCheckTargetsFile target to BuildDependsOn property (was added in beta releases)
 $buildDependsOns = Select-Xml "//msb:Project/msb:PropertyGroup/msb:BuildDependsOn[contains(.,'StyleCopMSBuildCheckTargetsFile')]" $projectXml -Namespace @{msb = $namespace}
 if ($buildDependsOns)
 {
@@ -23,6 +23,17 @@ if ($buildDependsOns)
             $propertyGroup.ParentNode.RemoveChild($propertyGroup)
         }
     }
+}
+
+# remove StyleCopMSBuildCheckTargetsFile from initial targets
+$initialTargets = $projectXml.Project.GetAttribute('InitialTargets').Split(";", [System.StringSplitOptions]::RemoveEmptyEntries) | select -uniq | where {$_ -ne 'StyleCopMSBuildCheckTargetsFile'}
+if ($initialTargets)
+{
+    $projectXml.Project.SetAttribute('InitialTargets', [string]::Join(";", $initialTargets))
+}
+else
+{
+    $projectXml.Project.RemoveAttribute('InitialTargets')
 }
 
 # remove StyleCopMSBuildCheckTargetsFile target(s)
