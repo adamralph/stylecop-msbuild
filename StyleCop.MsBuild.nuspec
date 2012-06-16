@@ -19,11 +19,11 @@ StyleCop.MSBuild release notes:-
 
 4.7.31.2 (Enhancement) Compatibility with package restore workflow (https://bitbucket.org/adamralph/stylecop-msbuild/issue/1/does-not-work-with-package-restore).
 
-4.7.31.1 (Bug) Fix to preserve line endings in element content in project file (https://bitbucket.org/adamralph/stylecop-msbuild/issue/1/does-not-work-with-package-restore).
+4.7.31.1 (Bug) Can changes line endings to unix style in project file (https://bitbucket.org/adamralph/stylecop-msbuild/issue/2/can-changes-line-endings-to-unix-style-in).
 
 4.7.26.6 (Bug) Fixed removal of current &lt;Import&gt; element in csproj file when the repository root folder is not named 'packages' and/or when the repository root folder belongs to the same folder as the csproj file.
 
-4.7.17.1 (Enchancement) Addition of &lt;Import&gt; element to project file when installing package (and removal when uninstalling) (https://stylecop.codeplex.com/workitem/7206).
+4.7.17.1 (Enchancement) Update .csproj Import during Nuget package install (https://stylecop.codeplex.com/workitem/7206).
 
 NOTE: There is a known issue with NuGet Package Manager 1.8 or later. If you have problems installing this version of StyleCop.MSBuild, see http://nuget.codeplex.com/workitem/2253 for a workaround.
 
