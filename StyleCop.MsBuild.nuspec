@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>StyleCop.MSBuild</id>
-    <version>4.7.31.1-beta04</version>
+    <version>4.7.31.2-beta04</version>
     <authors>Andy Reeves, Adam Ralph</authors>
     <owners>Adam Ralph</owners>
     <projectUrl>https://bitbucket.org/adamralph/stylecop-msbuild</projectUrl>
@@ -17,7 +17,9 @@ NOTE: If your solution is currently using StyleCop.MSBuild.4.7.17.0 or earlier, 
 
 StyleCop.MSBuild release notes:-
 
-4.7.31.1 Changed &lt;Import&gt; element to be conditional on presence of targets file to allow project to load into IDE in a package restore workflow and added &lt;Error&gt; conditional on absence of targets file to fail build when package is missing or incomplete.
+4.7.31.2 Changed &lt;Import&gt; element to be conditional on presence of targets file to allow project to load into IDE in a package restore workflow and added &lt;Warning&gt;/&lt;Error&gt; conditional on absence of targets file.
+
+4.7.31.1 Fix to preserve line endings in element content in project file.
 
 4.7.26.1 Fixed removal of current &lt;Import&gt; element in csproj file when the repository root folder is not named 'packages' and/or when the repository root folder belongs to the same folder as the csproj file.
 
