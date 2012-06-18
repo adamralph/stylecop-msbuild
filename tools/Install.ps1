@@ -2,73 +2,25 @@
 
 param($installPath, $toolsPath, $package, $project)
 
+Import-Module (Join-Path $toolsPath "Remove.psm1")
+
 # remove content hook from project and delete file
 $hookName = "StyleCop.MSBuild.ContentHook.txt"
 $project.ProjectItems.Item($hookName).Remove();
 Split-Path $project.FullName -parent | Join-Path -ChildPath $hookName | Remove-Item
 
-# save any unsaved changes to project before we start messing about with project file
+# save removal of content hook and any other unsaved changes to project before we start messing about with project file
 $project.Save()
 
-# read in project XML
+# read project XML
 $projectXml = New-Object System.Xml.XmlDocument
 $projectXml.Load($project.FullName)
 $namespace = 'http://schemas.microsoft.com/developer/msbuild/2003'
 
+# remove previous changes - executed here for safety, in case for some reason Uninstall.ps1 hasn't been executed
+Remove-Changes $projectXml $namespace
 
-
-# the following removal steps are copied from Uninstall.ps1 - they are executed here for safety, in case for some reason Uninstall.ps1 hasn't been executed
-# TODO: move the removal steps into a separate file and call from both scripts
-
-# remove addition(s) of StyleCopMSBuildCheckTargetsFile target to BuildDependsOn property (was added in beta releases)
-$buildDependsOns = Select-Xml "//msb:Project/msb:PropertyGroup/msb:BuildDependsOn[contains(.,'StyleCopMSBuildCheckTargetsFile')]" $projectXml -Namespace @{msb = $namespace}
-if ($buildDependsOns)
-{
-    foreach ($buildDependsOn in $buildDependsOns)
-    {
-        $propertyGroup = $buildDependsOn.Node.ParentNode
-        $propertyGroup.RemoveChild($buildDependsOn.Node)
-        if (!$propertyGroup.HasChildNodes)
-        {
-            $propertyGroup.ParentNode.RemoveChild($propertyGroup)
-        }
-    }
-}
-
-# remove StyleCopMSBuildCheckTargetsFile from initial targets
-$initialTargets = $projectXml.Project.GetAttribute('InitialTargets').Split(";", [System.StringSplitOptions]::RemoveEmptyEntries) | select -uniq | where {$_ -ne 'StyleCopMSBuildCheckTargetsFile'}
-if ($initialTargets)
-{
-    $projectXml.Project.SetAttribute('InitialTargets', [string]::Join(";", $initialTargets))
-}
-else
-{
-    $projectXml.Project.RemoveAttribute('InitialTargets')
-}
-
-# remove StyleCopMSBuildCheckTargetsFile target(s)
-$targets = Select-Xml "//msb:Project/msb:Target[@Name='StyleCopMSBuildCheckTargetsFile']" $projectXml -Namespace @{msb = $namespace}
-if ($targets)
-{
-    foreach ($target in $targets)
-    {
-        $target.Node.ParentNode.RemoveChild($target.Node)
-    }
-}
-
-# remove import(s)
-$imports = Select-Xml "//msb:Project/msb:Import[contains(@Project,'\StyleCop.MSBuild.')]" $projectXml -Namespace @{msb = $namespace}
-if ($imports)
-{
-    foreach ($import in $imports)
-    {
-        $import.Node.ParentNode.RemoveChild($import.Node)
-    }
-}
-
-
-
-# work out relative path to targets
+# determine relative path to targets
 $absolutePath = Join-Path $toolsPath "StyleCop.targets"
 $absoluteUri = New-Object -typename System.Uri -argumentlist $absolutePath
 $projectUri = New-Object -typename System.Uri -argumentlist $project.FullName
@@ -81,39 +33,31 @@ $import.SetAttribute('Condition', "Exists('$relativePath')")
 $import.SetAttribute('Project', $relativePath)
 $projectXml.Project.AppendChild($import)
 
-# add StyleCopMSBuildCheckTargetsFile target
+# add target
 $target = $projectXml.CreateElement('Target', $namespace)
-$target.SetAttribute('Name', 'StyleCopMSBuildCheckTargetsFile')
+$target.SetAttribute('Name', 'StyleCopMSBuildTargetsNotFound')
 
-$message = "Failed to find file '$relativePath'. The StyleCop.MSBuild package is either missing or incomplete. If you are building manually using an IDE (e.g. Visual Studio), ensure that the package is present and then (IMPORTANT) reload the project in order to import the targets. Otherwise, ensure that the package is present and then restart the build."
+$message = "Failed to import StyleCop.MSBuild targets from '$relativePath'. The StyleCop.MSBuild package was either missing or incomplete when the project was loaded. If you are building manually using an IDE (e.g. Visual Studio), restore the package manually and then reload the project. If you are building manually without using an IDE, restore the package manually and then restart the build. If this is an automated build (e.g. CI server), ensure that the build process restores the package before the project is built. Note that 'standard' NuGet package restore (during build) does not work with this package because the package needs to be present before the project is loaded."
 
 $warning = $projectXml.CreateElement('Warning', $namespace)
-$warning.SetAttribute('Condition', "!Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)!=false And `$(RestorePackages)!=true")
-$warning.SetAttribute('Text', "$message")
+$warning.SetAttribute('Condition', "`$(StyleCopTreatErrorsAsWarnings)!=false")
+$warning.SetAttribute('Text', $message)
 $target.AppendChild($warning)
 
 $error = $projectXml.CreateElement('Error', $namespace)
-$error.SetAttribute('Condition', "!Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)==false And `$(RestorePackages)!=true")
-$error.SetAttribute('Text', "$message")
+$error.SetAttribute('Condition', "`$(StyleCopTreatErrorsAsWarnings)==false")
+$error.SetAttribute('Text', $message)
 $target.AppendChild($error)
-
-$messageRestore = "Failed to find file '$relativePath'. The StyleCop.MSBuild package has not been restored. If you are building manually using an IDE (e.g. Visual Studio), restore the StyleCop.MSBuild package and then (IMPORTANT) reload the project in order to import the targets. If you are building manually without using an IDE, restore the StyleCop.MSBuild package and then restart the build. If this is an automated build (e.g. CI server), ensure that the build process restores the StyleCop.MSBuild package before the project is built."
-
-$warningRestore = $projectXml.CreateElement('Warning', $namespace)
-$warningRestore.SetAttribute('Condition', "!Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)!=false And `$(RestorePackages)==true")
-$warningRestore.SetAttribute('Text', "$messageRestore")
-$target.AppendChild($warningRestore)
-
-$errorRestore = $projectXml.CreateElement('Error', $namespace)
-$errorRestore.SetAttribute('Condition', "!Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)==false And `$(RestorePackages)==true")
-$errorRestore.SetAttribute('Text', "$messageRestore")
-$target.AppendChild($errorRestore)
 
 $projectXml.Project.AppendChild($target)
 
-# add StyleCopMSBuildCheckTargetsFile to initial targets
-$initialTargets = $projectXml.Project.GetAttribute('InitialTargets').Split(";", [System.StringSplitOptions]::RemoveEmptyEntries) + 'StyleCopMSBuildCheckTargetsFile' | select -uniq
-$projectXml.Project.SetAttribute('InitialTargets', [string]::Join(";", $initialTargets))
+# inject target into build
+$propertyGroup = $projectXml.CreateElement('PropertyGroup', $namespace)
+$dependsOn = $projectXml.CreateElement('PrepareForBuildDependsOn', $namespace)
+$dependsOn.SetAttribute('Condition', "!Exists('$relativePath')")
+$dependsOn.AppendChild($projectXml.CreateTextNode('StyleCopMSBuildTargetsNotFound;$(PrepareForBuildDependsOn)'))
+$propertyGroup.AppendChild($dependsOn)
+$projectXml.Project.AppendChild($propertyGroup)
 
 # save changes
 $projectXml.Save($project.FullName)
