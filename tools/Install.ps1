@@ -37,17 +37,39 @@ $projectXml.Project.AppendChild($import)
 $target = $projectXml.CreateElement('Target', $namespace)
 $target.SetAttribute('Name', 'StyleCopMSBuildTargetsNotFound')
 
-$message = "Failed to import StyleCop.MSBuild targets from '$relativePath'. The StyleCop.MSBuild package was either missing or incomplete when the project was loaded. If you are building manually using an IDE (e.g. Visual Studio), restore the package manually and then reload the project. If you are building manually without using an IDE, restore the package manually and then restart the build. If this is an automated build (e.g. CI server), ensure that the build process restores the package before the project is built. Note that 'standard' NuGet package restore (during build) does not work with this package because the package needs to be present before the project is loaded."
+$messageMissing = "Failed to import StyleCop.MSBuild targets from '$relativePath'. The StyleCop.MSBuild package was either missing or incomplete when the project was loaded. Ensure that the package is present and then restart the build. If you are using an IDE (e.g. Visual Studio), reload the project before restarting the build."
+$messageRestore = "Failed to import StyleCop.MSBuild targets from '$relativePath'. The StyleCop.MSBuild package was either missing or incomplete when the project was loaded. To fix this, restore the package and then restart the build. If you are using an IDE (e.g. Visual Studio), you may need to reload the project before restarting the build. Note that regular NuGet package restore (during build) does not work with this package because the package needs to be present before the project is loaded. If this is an automated build (e.g. CI server), ensure that the build process restores the StyleCop.MSBuild package before the project is built."
+$messagePresent = "Failed to import StyleCop.MSBuild targets from '$relativePath'. The StyleCop.MSBuild package was either missing or incomplete when the project was loaded. To fix this, restart the build. If you are using an IDE (e.g. Visual Studio), reload the project before restarting the build. Note that when using regular NuGet package restore (during build) the package will not be available for the initial build because the package needs to be present before the project is loaded. If package restore executes successfully in the intitial build then the package will be available for subsequent builds. If this is an automated build (e.g. CI server), you may want to ensure that the build process restores the StyleCop.MSBuild package before the initial build."
 
-$warning = $projectXml.CreateElement('Warning', $namespace)
-$warning.SetAttribute('Condition', "`$(StyleCopTreatErrorsAsWarnings)!=false")
-$warning.SetAttribute('Text', $message)
-$target.AppendChild($warning)
+$warningMissing = $projectXml.CreateElement('Warning', $namespace)
+$warningMissing.SetAttribute('Condition', "!Exists('$relativePath') And `$(RestorePackages)!=true And `$(StyleCopTreatErrorsAsWarnings)!=false")
+$warningMissing.SetAttribute('Text', $messageMissing)
+$target.AppendChild($warningMissing)
 
-$error = $projectXml.CreateElement('Error', $namespace)
-$error.SetAttribute('Condition', "`$(StyleCopTreatErrorsAsWarnings)==false")
-$error.SetAttribute('Text', $message)
-$target.AppendChild($error)
+$errorMissing = $projectXml.CreateElement('Error', $namespace)
+$errorMissing.SetAttribute('Condition', "!Exists('$relativePath') And `$(RestorePackages)!=true And `$(StyleCopTreatErrorsAsWarnings)==false")
+$errorMissing.SetAttribute('Text', $messageMissing)
+$target.AppendChild($errorMissing)
+
+$warningRestore = $projectXml.CreateElement('Warning', $namespace)
+$warningRestore.SetAttribute('Condition', "!Exists('$relativePath') And `$(RestorePackages)==true And `$(StyleCopTreatErrorsAsWarnings)!=false")
+$warningRestore.SetAttribute('Text', $messageRestore)
+$target.AppendChild($warningRestore)
+
+$errorRestore = $projectXml.CreateElement('Error', $namespace)
+$errorRestore.SetAttribute('Condition', "!Exists('$relativePath') And `$(RestorePackages)==true And `$(StyleCopTreatErrorsAsWarnings)==false")
+$errorRestore.SetAttribute('Text', $messageRestore)
+$target.AppendChild($errorRestore)
+
+$warningPresent = $projectXml.CreateElement('Warning', $namespace)
+$warningPresent.SetAttribute('Condition', "Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)!=false")
+$warningPresent.SetAttribute('Text', $messagePresent)
+$target.AppendChild($warningPresent)
+
+$errorPresent = $projectXml.CreateElement('Error', $namespace)
+$errorPresent.SetAttribute('Condition', "Exists('$relativePath') And `$(StyleCopTreatErrorsAsWarnings)==false")
+$errorPresent.SetAttribute('Text', $messagePresent)
+$target.AppendChild($errorPresent)
 
 $projectXml.Project.AppendChild($target)
 
