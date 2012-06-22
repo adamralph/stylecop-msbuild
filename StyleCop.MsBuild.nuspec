@@ -2,13 +2,13 @@
 <package>
   <metadata>
     <id>StyleCop.MSBuild</id>
-    <version>4.7.31.1</version>
+    <version>4.7.31.2</version>
     <authors>Andy Reeves, Adam Ralph</authors>
     <owners>Adam Ralph</owners>
     <projectUrl>https://bitbucket.org/adamralph/stylecop-msbuild</projectUrl>
     <licenseUrl>https://bitbucket.org/adamralph/stylecop-msbuild/src/f067e2091562/license.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Adds official StyleCop MSBuild targets to your project. Runs StyleCop analysis on your project with every build. Works both on a developer workstation (with or without Visual Studio) and on a build server. Includes official StyleCop binaries. Does not require installation of StyleCop on either a developer workstation or build server. For update notifications follow https://twitter.com/#!/adamralph and/or subscribe to http://adamralph.blogspot.com/.
+    <description>Adds official StyleCop MSBuild targets to your project. Runs StyleCop analysis on your project with every build. Works both on a developer workstation (with or without Visual Studio) and on a build server. Includes official StyleCop binaries. Does not require installation of StyleCop on either a developer workstation or build server. For update notifications follow https://twitter.com/#!/adamralph and/or subscribe to http://adamralph.blogspot.com/. Come and chat to fellow developers about StyleCop and StyleCop.MSBuild at https://jabbr.net/#/rooms/stylecop/.
 
 NOTE: There is a known issue with NuGet Package Manager 1.8 or later. If you have problems installing this version of StyleCop.MSBuild, see http://nuget.codeplex.com/workitem/2253 for a workaround.
 
@@ -17,11 +17,13 @@ NOTE: If your solution is currently using StyleCop.MSBuild.4.7.17.0 or earlier, 
 
 StyleCop.MSBuild release notes:-
 
-4.7.31.1 Fix to preserve line endings in element content in project file.
+4.7.31.2 (Enhancement) Compatibility with package restore workflow (https://bitbucket.org/adamralph/stylecop-msbuild/issue/1).
 
-4.7.26.1 Fixed removal of current &lt;Import&gt; element in csproj file when the repository root folder is not named 'packages' and/or when the repository root folder belongs to the same folder as the csproj file.
+4.7.31.1 (Bug) Changes element content line endings to unix style in project file (https://bitbucket.org/adamralph/stylecop-msbuild/issue/2).
 
-4.7.17.1 Addition of &lt;Import&gt; element to project file when installing package (and removal when uninstalling).
+4.7.26.6 (Bug) Import element is not removed from csproj file when the repository root folder is not named 'packages' and/or when the repository root folder belongs to the same folder as the csproj file.
+
+4.7.17.1 (Enchancement) Update .csproj Import during Nuget package install (https://stylecop.codeplex.com/workitem/7206).
 
 NOTE: There is a known issue with NuGet Package Manager 1.8 or later. If you have problems installing this version of StyleCop.MSBuild, see http://nuget.codeplex.com/workitem/2253 for a workaround.
 

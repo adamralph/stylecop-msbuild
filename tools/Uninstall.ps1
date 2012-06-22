@@ -2,23 +2,18 @@
 
 param($installPath, $toolsPath, $package, $project)
 
-# save any unsaved changes before we start messing about with the project file on disk
+Import-Module (Join-Path $toolsPath "Remove.psm1")
+
+# save any unsaved changes before we start messing about with the project file
 $project.Save()
 
-# read in project XML
-$projectXml = New-Object System.Xml.XmlDocument
-$projectXml.Load($project.FullName)
+# load project XML
+$doc = New-Object System.Xml.XmlDocument
+$doc.Load($project.FullName)
 $namespace = 'http://schemas.microsoft.com/developer/msbuild/2003'
 
-# remove import nodes
-$nodes = @(Select-Xml "//msb:Project/msb:Import[contains(@Project,'\StyleCop.MSBuild.')]" $projectXml -Namespace @{msb = $namespace} | Foreach {$_.Node})
-if ($nodes)
-{
-    foreach ($node in $nodes)
-    {
-        $node.ParentNode.RemoveChild($node)
-    }
-}
+# remove changes
+Remove-Changes $doc $namespace
 
 # save changes
-$projectXml.Save($project.FullName)
+$doc.Save($project.FullName)
