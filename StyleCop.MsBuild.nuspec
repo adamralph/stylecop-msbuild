@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>StyleCop.MSBuild</id>
-    <version>4.7.31.3-beta01</version>
+    <version>4.7.32.0</version>
     <authors>Andy Reeves, Adam Ralph</authors>
     <owners>Adam Ralph</owners>
     <projectUrl>https://bitbucket.org/adamralph/stylecop-msbuild</projectUrl>
@@ -17,7 +17,7 @@ NOTE: If your solution is currently using StyleCop.MSBuild.4.7.17.0 or earlier, 
 
 StyleCop.MSBuild release notes:-
 
-4.7.31.3 (Enhancement) Remove duplication in XML elements (https://bitbucket.org/adamralph/stylecop-msbuild/issue/3).
+4.7.32.0 (Enhancement) Remove duplication in XML elements (https://bitbucket.org/adamralph/stylecop-msbuild/issue/3).
 
 4.7.31.2 (Enhancement) Compatibility with package restore workflow (https://bitbucket.org/adamralph/stylecop-msbuild/issue/1).
 
