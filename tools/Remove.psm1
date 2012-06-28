@@ -1,6 +1,7 @@
-#  Copyright (c) Adam Ralph. All rights reserved.
+# Copyright (c) Adam Ralph. All rights reserved.
 
-function Remove-Changes {
+function Remove-Changes
+{
     param(
         [parameter(Position = 0, Mandatory = $true)]
         [System.Xml.XmlDocument]$doc,

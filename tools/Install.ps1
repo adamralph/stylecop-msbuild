@@ -1,17 +1,19 @@
-#  Copyright (c) Adam Ralph. All rights reserved.
+# Copyright (c) Adam Ralph. All rights reserved.
 
 param($installPath, $toolsPath, $package, $project)
 
 Import-Module (Join-Path $toolsPath "Remove.psm1")
 
-function Append-TextElement($doc, $namespace, $parent, $elementName, $condition, $text) {
+function Append-TextElement($doc, $namespace, $parent, $elementName, $condition, $text)
+{
     $element = $doc.CreateElement($elementName, $namespace)
     $element.SetAttribute('Condition', $condition)
     $element.SetAttribute('Text', $text)
     $parent.AppendChild($element)
 }
 
-function Append-Property($doc, $namespace, $propertyGroup, $propertyName, $value) {
+function Append-Property($doc, $namespace, $propertyGroup, $propertyName, $value)
+{
     $property = $doc.CreateElement($propertyName, $namespace)
     $property.AppendChild($doc.CreateTextNode($value))
     $propertyGroup.AppendChild($property)
@@ -19,7 +21,7 @@ function Append-Property($doc, $namespace, $propertyGroup, $propertyName, $value
 
 # remove content hook from project and delete file
 $hookName = "StyleCop.MSBuild.ContentHook.txt"
-$project.ProjectItems.Item($hookName).Remove();
+$project.ProjectItems.Item($hookName).Remove()
 Split-Path $project.FullName -parent | Join-Path -ChildPath $hookName | Remove-Item
 
 # save removal of content hook and any other unsaved changes to project before we start messing about with project file
