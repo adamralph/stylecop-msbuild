@@ -6,7 +6,7 @@
     <authors>Andy Reeves, Adam Ralph</authors>
     <owners>Adam Ralph</owners>
     <projectUrl>https://bitbucket.org/adamralph/stylecop-msbuild</projectUrl>
-    <iconUrl>https://bitbucket.org/adamralph/stylecop-msbuild/raw/2a88b63a17fe20fb8b5eb065e8168751dbeeeb2a/img/StyleCop.MSBuild.png</iconUrl>
+    <iconUrl>https://bitbucket.org/adamralph/stylecop-msbuild/raw/d2da22861c7ebed86110f416e0b9310fc3a74940/img/StyleCop.MSBuild.png</iconUrl>
     <licenseUrl>https://bitbucket.org/adamralph/stylecop-msbuild/src/f067e2091562/license.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Adds official StyleCop MSBuild targets to your project for running StyleCop analysis with every build. Includes official StyleCop binaries. Works both on a developer workstation (with or without Visual Studio) and on a build server. Does not require installation of StyleCop on any machine.</summary>
