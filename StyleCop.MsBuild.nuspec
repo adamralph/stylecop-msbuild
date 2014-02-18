@@ -9,9 +9,15 @@
     <iconUrl>https://bitbucket.org/adamralph/stylecop-msbuild/raw/d2da22861c7ebed86110f416e0b9310fc3a74940/img/StyleCop.MSBuild.png</iconUrl>
     <licenseUrl>https://bitbucket.org/adamralph/stylecop-msbuild/src/f067e2091562/license.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>Adds official StyleCop MSBuild targets to your project for running StyleCop analysis with every build. Includes official StyleCop binaries. Works both on a developer workstation (with or without Visual Studio) and on a build server. Does not require installation of StyleCop on any machine.</summary>
-    <description>Adds official StyleCop MSBuild targets to your project for running StyleCop analysis with every build. Includes official StyleCop binaries. Works both on a developer workstation (with or without Visual Studio) and on a build server. Does not require installation of StyleCop on any machine. Compatible with NuGet package restore. For update notifications follow https://twitter.com/adamralph. Come and chat to fellow developers about StyleCop and StyleCop.MSBuild at https://jabbr.net/#/rooms/stylecop/.</description>
-    <releaseNotes>For StyleCop release notes see http://stylecop.codeplex.com/.
+    <summary>NOTE: if you are using 4.7.48.0 or earlier, uninstall, then reinstall this version. DO NOT perform an update.
+
+Adds official StyleCop MSBuild targets to your project for running StyleCop analysis with every build. Includes official StyleCop binaries. Works both on a developer workstation (with or without Visual Studio) and on a build server. Does not require installation of StyleCop on any machine.</summary>
+    <description>NOTE: if you are using 4.7.48.0 or earlier, uninstall, then reinstall this version. DO NOT perform an update.
+
+Adds official StyleCop MSBuild targets to your project for running StyleCop analysis with every build. Includes official StyleCop binaries. Works both on a developer workstation (with or without Visual Studio) and on a build server. Does not require installation of StyleCop on any machine. Compatible with NuGet package restore. For update notifications follow https://twitter.com/adamralph. Come and chat to fellow developers about StyleCop and StyleCop.MSBuild at https://jabbr.net/#/rooms/stylecop/.</description>
+    <releaseNotes>NOTE: if you are using 4.7.48.0 or earlier, uninstall, then reinstall this version. DO NOT perform an update.
+
+For StyleCop release notes see http://stylecop.codeplex.com/.
 
 StyleCop.MSBuild release notes:-
 
