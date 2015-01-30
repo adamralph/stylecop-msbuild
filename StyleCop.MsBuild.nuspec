@@ -2,7 +2,7 @@
 <package>
   <metadata minClientVersion="2.7">
     <id>StyleCop.MSBuild</id>
-    <version>4.7.49.0</version>
+    <version>4.7.49.1</version>
     <authors>Andy Reeves, Adam Ralph</authors>
     <owners>Adam Ralph</owners>
     <projectUrl>https://bitbucket.org/adamralph/stylecop-msbuild</projectUrl>
@@ -20,6 +20,8 @@ Adds official StyleCop MSBuild targets to your project for running StyleCop anal
 For StyleCop release notes see http://stylecop.codeplex.com/.
 
 StyleCop.MSBuild release notes:-
+
+4.7.49.1 New: StyleCopOverrideSettingsFile will look in %AppData% if not set - https://bitbucket.org/adamralph/stylecop-msbuild/pull-request/1/
 
 4.7.48.1 New: Switch to using /build NuGet feature - https://bitbucket.org/adamralph/stylecop-msbuild/issue/12/
 
