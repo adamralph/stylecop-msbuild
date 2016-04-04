@@ -5,9 +5,9 @@
     <version>4.7.50.0</version>
     <authors>StyleCop contributors, Adam Ralph</authors>
     <owners>Adam Ralph</owners>
-    <projectUrl>https://bitbucket.org/adamralph/stylecop-msbuild</projectUrl>
-    <iconUrl>https://bitbucket.org/adamralph/stylecop-msbuild/raw/d2da22861c7ebed86110f416e0b9310fc3a74940/img/StyleCop.MSBuild.png</iconUrl>
-    <licenseUrl>https://bitbucket.org/adamralph/stylecop-msbuild/src/f067e2091562/license.txt</licenseUrl>
+    <projectUrl>https://github.com/adamralph/stylecop-msbuild</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/adamralph/stylecop-msbuild/master/img/StyleCop.MSBuild.png</iconUrl>
+    <licenseUrl>https://raw.githubusercontent.com/adamralph/stylecop-msbuild/master/license.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NOTE: if you are using 4.7.48.0 or earlier, uninstall, then reinstall this version. DO NOT perform an update.
 
