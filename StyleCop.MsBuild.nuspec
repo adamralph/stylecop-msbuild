@@ -2,7 +2,7 @@
 <package>
   <metadata minClientVersion="2.7">
     <id>StyleCop.MSBuild</id>
-    <version>4.7.53.0</version>
+    <version>4.7.54.0</version>
     <authors>StyleCop contributors, Adam Ralph</authors>
     <owners>Adam Ralph</owners>
     <projectUrl>https://github.com/adamralph/stylecop-msbuild</projectUrl>
