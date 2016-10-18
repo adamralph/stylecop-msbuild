@@ -1,3 +1,5 @@
+**This project is no longer maintained. Future releases of StyleCop.MSBuild will be managed by the [StyleCop project](http://stylecop.codeplex.com/).**
+
 # What
 
 See [Introducing StyleCop.MSBuild](http://adamralph.com/2012/04/17/introducing-stylecop-msbuild/) for an introduction to StyleCop.MSBuild.
